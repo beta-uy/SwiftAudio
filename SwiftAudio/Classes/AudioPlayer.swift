@@ -128,8 +128,10 @@ public class AudioPlayer: AVPlayerWrapperDelegate {
      - parameter infoCenter: The InfoCenter to update. Default is `MPNowPlayingInfoCenter.default()`.
      */
     public init(nowPlayingInfoController: NowPlayingInfoControllerProtocol = NowPlayingInfoController(),
-                remoteCommandController: RemoteCommandController = RemoteCommandController()) {
-        self._wrapper = AVPlayerWrapper()
+                remoteCommandController: RemoteCommandController = RemoteCommandController(),
+                 newTranscriptEvent: ((String) -> Void)?) {
+        self.newTranscriptEvent = newTranscriptEvent
+        self._wrapper = AVPlayerWrapper(newTranscriptEvent:newTranscriptEvent)
         self.nowPlayingInfoController = nowPlayingInfoController
         self.remoteCommandController = remoteCommandController
         

@@ -31,6 +31,7 @@ class AVPlayerWrapper: AVPlayerWrapperProtocol {
     let playerTimeObserver: AVPlayerTimeObserver
     let playerItemNotificationObserver: AVPlayerItemNotificationObserver
     let playerItemObserver: AVPlayerItemObserver
+    var newTranscriptEvent: ((String) -> Void)?
     
     /**
      True if the last call to load(from:playWhenReady) had playWhenReady=true.
@@ -46,8 +47,9 @@ class AVPlayerWrapper: AVPlayerWrapperProtocol {
         }
     }
     
-    public init() {
+    public init( newTranscriptEvent: ((String) -> Void)?) {
         self.avPlayer = AVPlayer()
+        self.newTranscriptEvent = newTranscriptEvent
         self.playerObserver = AVPlayerObserver()
         self.playerObserver.player = avPlayer
         self.playerTimeObserver = AVPlayerTimeObserver(periodicObserverTimeInterval: timeEventFrequency.getTime())
@@ -134,6 +136,7 @@ class AVPlayerWrapper: AVPlayerWrapperProtocol {
     
     func play() {
         avPlayer.play()
+        LiveTranscript.shared.installTap(player: self.avPlayer, newTranscriptEvent: self.newTranscriptEvent)
     }
     
     func pause() {
